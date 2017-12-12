@@ -134,17 +134,18 @@ trait BaseService extends Service {
   protected def buildAdditionalArguments(cmd: ArrayBuffer[String]): ArrayBuffer[String] = cmd
 
   def startShadowsocksProxy(
-    remoteHost: String = "127.0.0.1",
-    remotePort: Int = 1080
+    localPort: Int = -1,
+    remoteHost: String = null,
+    remotePort: Int = -1
   ): GuardedProcess = {
 
-    val cmd = ArrayBuffer[String](getApplicationInfo.dataDir + "/ip-relay"
-      , "-1"
+    val cmd = ArrayBuffer[String](getApplicationInfo.nativeLibraryDir + "/libip-relay.so"
+      , (if (localPort < 0) profile.localPort else localPort).toString
       , (if (remoteHost == null) profile.host else remoteHost)
       , (if (remotePort < 0) profile.remotePort else remotePort).toString
-      , getApplicationInfo.dataDir)
+      , getFilesDir().getAbsolutePath())
 
-    return new GuardedProcess(cmd).start()
+    return new GuardedProcess(cmd: _*).start()
   }
 
   /**
@@ -152,7 +153,7 @@ trait BaseService extends Service {
     */
   def startNativeProcesses() {
     if (profile.password.length() == 0) {
-      sstunnelProcess = startShadowsocksProxy()
+      sslocalProcess = startShadowsocksProxy()
       return
     }
     buildShadowsocksConfig()
