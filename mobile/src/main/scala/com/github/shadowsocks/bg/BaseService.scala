@@ -138,11 +138,10 @@ trait BaseService extends Service {
     remotePort: Int = -1
   ): GuardedProcess = {
 
-    val cmd = ArrayBuffer[String](getApplicationInfo.nativeLibraryDir + "/libip-relay.so"
-      , "1085"
+    val cmd = ArrayBuffer[String](new File(getApplicationInfo.nativeLibraryDir, Executable.IPRELAY).getAbsolutePath
+      , app.dataStore.portProxy.toString
       , (if (remoteHost == null) profile.host else remoteHost)
-      , (if (remotePort < 0) profile.remotePort else remotePort).toString
-      , getFilesDir().getAbsolutePath())
+      , (if (remotePort < 0) profile.remotePort else remotePort).toString)
 
     return new GuardedProcess(cmd: _*).start()
   }
