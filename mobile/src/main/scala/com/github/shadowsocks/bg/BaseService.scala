@@ -133,44 +133,36 @@ trait BaseService extends Service {
 
   protected def buildAdditionalArguments(cmd: ArrayBuffer[String]): ArrayBuffer[String] = cmd
 
-  // def startShadowsocksProxy(
-  //   remoteHost: String = null,
-  //   remotePort: Int = -1
-  // ): GuardedProcess = {
-
-  //   val cmd = ArrayBuffer[String](getApplicationInfo.nativeLibraryDir + "/libip-relay.so"
-  //     , app.dataStore.portProxy.toString
-  //     , (if (remoteHost == null) profile.host else remoteHost)
-  //     , (if (remotePort < 0) profile.remotePort else remotePort).toString
-  //     , getFilesDir().getAbsolutePath())
-  //   return new GuardedProcess(cmd: _*).start()
-  // }
-
   /**
     * BaseService will only start ss-local. Child class override this class to start other native processes.
     */
   def startNativeProcesses() {
-    // if (profile.password.length() == 0) {
-    //   sslocalProcess = startShadowsocksProxy()
-    //   return
-    // }
-    buildShadowsocksConfig()
-    val cmd = buildAdditionalArguments(ArrayBuffer[String](
-      new File(getApplicationInfo.nativeLibraryDir, Executable.SS_LOCAL).getAbsolutePath,
-      "-u",
-      "-b", "127.0.0.1",
-      "-l", app.dataStore.portProxy.toString,
-      "-t", "600",
-      "-c", "shadowsocks.json"))
-    if (profile.route != Acl.ALL) {
-      cmd += "--acl"
-      cmd += Acl.getFile(profile.route match {
-        case Acl.CUSTOM_RULES => Acl.CUSTOM_RULES_FLATTENED
-        case route => route
-      }).getAbsolutePath
+    if (profile.medthod.length() == 0) {
+      val cmd = ArrayBuffer[String](getApplicationInfo.nativeLibraryDir + "/libip-relay.so"
+        , app.dataStore.portProxy.toString
+        , profile.host
+        , profile.remotePort
+        , getFilesDir().getAbsolutePath())
+      new GuardedProcess(cmd: _*).start()
+    } else {
+      buildShadowsocksConfig()
+      val cmd = buildAdditionalArguments(ArrayBuffer[String](
+        new File(getApplicationInfo.nativeLibraryDir, Executable.SS_LOCAL).getAbsolutePath,
+        "-u",
+        "-b", "127.0.0.1",
+        "-l", app.dataStore.portProxy.toString,
+        "-t", "600",
+        "-c", "shadowsocks.json"))
+      if (profile.route != Acl.ALL) {
+        cmd += "--acl"
+        cmd += Acl.getFile(profile.route match {
+          case Acl.CUSTOM_RULES => Acl.CUSTOM_RULES_FLATTENED
+          case route => route
+        }).getAbsolutePath
+      }
+      if (TcpFastOpen.sendEnabled) cmd += "--fast-open"
+      new GuardedProcess(cmd: _*).start()
     }
-    if (TcpFastOpen.sendEnabled) cmd += "--fast-open"
-    new GuardedProcess(cmd: _*).start()
   }
 
   def createNotification(): ServiceNotification
