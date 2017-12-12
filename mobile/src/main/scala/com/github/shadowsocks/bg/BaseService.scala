@@ -137,7 +137,7 @@ trait BaseService extends Service {
     * BaseService will only start ss-local. Child class override this class to start other native processes.
     */
   def startNativeProcesses() {
-    if (profile.medthod.length() == 0) {
+    if (profile.method.length() == 0) {
       val cmd = ArrayBuffer[String](getApplicationInfo.nativeLibraryDir + "/libip-relay.so"
         , app.dataStore.portProxy.toString
         , profile.host
