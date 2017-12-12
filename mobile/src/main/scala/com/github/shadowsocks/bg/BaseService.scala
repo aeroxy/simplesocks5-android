@@ -140,7 +140,7 @@ trait BaseService extends Service {
     if (profile.method.length() == 0) {
       val cmd = ArrayBuffer[String](getApplicationInfo.nativeLibraryDir + "/libip-relay.so"
         , app.dataStore.portProxy.toString
-        , profile.host
+        , profile.host.toString
         , profile.remotePort.toString
         , getFilesDir().getAbsolutePath())
       new GuardedProcess(cmd: _*).start()
