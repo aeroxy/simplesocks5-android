@@ -119,7 +119,7 @@ class MainActivity extends AppCompatActivity with ServiceBoundContext with Drawe
         if (state == ServiceState.CONNECTING) fabProgressCircle.beginFinalAnimation()
         else fabProgressCircle.postDelayed(hideCircle, 1000)
         fab.setImageResource(R.drawable.ic_start_connected)
-        if (profile.method.length() == 0) statusText.setText("Socks5 Client Enabled")
+        if (app.currentProfile.method.length() == 0) statusText.setText("Socks5 Client Enabled")
         else statusText.setText(R.string.vpn_connected)
       case ServiceState.STOPPING =>
         fab.setImageResource(R.drawable.ic_start_busy)
