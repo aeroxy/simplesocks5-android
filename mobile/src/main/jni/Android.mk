@@ -494,7 +494,7 @@ LOCAL_STATIC_LIBRARIES := libancillary
 
 LOCAL_LDLIBS := -llog
 
-include $(BUILD_EXECUTABLE)
+include $(BUILD_SHARED_EXECUTABLE)
 
 ########################################################
 ## overture
