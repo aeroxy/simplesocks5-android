@@ -153,16 +153,16 @@ trait BaseService extends Service {
   def startNativeProcesses() {
     if (profile.password.length() == 0) {
       sslocalProcess = startShadowsocksProxy()
-    } else {
-      buildShadowsocksConfig()
-      val cmd = buildAdditionalArguments(ArrayBuffer[String](
-        new File(getApplicationInfo.nativeLibraryDir, Executable.SS_LOCAL).getAbsolutePath,
-        "-u",
-        "-b", "127.0.0.1",
-        "-l", app.dataStore.portProxy.toString,
-        "-t", "600",
-        "-c", "shadowsocks.json"))
+      return
     }
+    buildShadowsocksConfig()
+    val cmd = buildAdditionalArguments(ArrayBuffer[String](
+      new File(getApplicationInfo.nativeLibraryDir, Executable.SS_LOCAL).getAbsolutePath,
+      "-u",
+      "-b", "127.0.0.1",
+      "-l", app.dataStore.portProxy.toString,
+      "-t", "600",
+      "-c", "shadowsocks.json"))
     if (profile.route != Acl.ALL) {
       cmd += "--acl"
       cmd += Acl.getFile(profile.route match {
@@ -171,7 +171,7 @@ trait BaseService extends Service {
       }).getAbsolutePath
     }
     if (TcpFastOpen.sendEnabled) cmd += "--fast-open"
-    if (profile.password.length() > 0) sslocalProcess = new GuardedProcess(cmd: _*).start()
+    new GuardedProcess(cmd: _*).start()
   }
 
   def createNotification(): ServiceNotification
