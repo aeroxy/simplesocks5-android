@@ -133,13 +133,27 @@ trait BaseService extends Service {
 
   protected def buildAdditionalArguments(cmd: ArrayBuffer[String]): ArrayBuffer[String] = cmd
 
+  // def startShadowsocksProxy(
+  //   remoteHost: String = null,
+  //   remotePort: Int = -1
+  // ): GuardedProcess = {
+
+  //   val cmd = ArrayBuffer[String](getApplicationInfo.nativeLibraryDir + "/libip-relay.so"
+  //     , app.dataStore.portProxy.toString
+  //     , (if (remoteHost == null) profile.host else remoteHost)
+  //     , (if (remotePort < 0) profile.remotePort else remotePort).toString
+  //     , getFilesDir().getAbsolutePath())
+  //   return new GuardedProcess(cmd: _*).start()
+  // }
+
   /**
     * BaseService will only start ss-local. Child class override this class to start other native processes.
     */
   def startNativeProcesses() {
-    if (profile.password.length() == 0) {
-      return
-    }
+    // if (profile.password.length() == 0) {
+    //   sslocalProcess = startShadowsocksProxy()
+    //   return
+    // }
     buildShadowsocksConfig()
     val cmd = buildAdditionalArguments(ArrayBuffer[String](
       new File(getApplicationInfo.nativeLibraryDir, Executable.SS_LOCAL).getAbsolutePath,
