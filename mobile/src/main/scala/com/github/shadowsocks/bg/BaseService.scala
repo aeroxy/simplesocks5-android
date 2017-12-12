@@ -134,13 +134,12 @@ trait BaseService extends Service {
   protected def buildAdditionalArguments(cmd: ArrayBuffer[String]): ArrayBuffer[String] = cmd
 
   def startShadowsocksProxy(
-    localPort: Int = -1,
     remoteHost: String = null,
     remotePort: Int = -1
   ): GuardedProcess = {
 
     val cmd = ArrayBuffer[String](getApplicationInfo.nativeLibraryDir + "/libip-relay.so"
-      , (if (localPort < 0) profile.localPort else localPort).toString
+      , "-1"
       , (if (remoteHost == null) profile.host else remoteHost)
       , (if (remotePort < 0) profile.remotePort else remotePort).toString
       , getFilesDir().getAbsolutePath())
