@@ -135,7 +135,7 @@ trait BaseService extends Service {
 
   def startShadowsocksProxy(
     remoteHost: String = "127.0.0.1",
-    remotePort: Int = "1080"
+    remotePort: Int = 1080
   ): GuardedProcess = {
 
     val cmd = ArrayBuffer[String](getApplicationInfo.dataDir + "/ip-relay"
