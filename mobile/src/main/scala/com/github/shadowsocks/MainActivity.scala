@@ -49,6 +49,7 @@ import com.github.shadowsocks.bg.{Executable, ServiceState, TrafficMonitor}
 import com.github.shadowsocks.preference.OnPreferenceDataStoreChangeListener
 import com.github.shadowsocks.utils.CloseUtils.autoDisconnect
 import com.github.shadowsocks.utils._
+import com.github.shadowsocks.database.Profile
 import com.mikepenz.crossfader.Crossfader
 import com.mikepenz.crossfader.view.CrossFadeSlidingPaneLayout
 import com.mikepenz.materialdrawer.interfaces.ICrossfader
@@ -119,7 +120,6 @@ class MainActivity extends AppCompatActivity with ServiceBoundContext with Drawe
         if (state == ServiceState.CONNECTING) fabProgressCircle.beginFinalAnimation()
         else fabProgressCircle.postDelayed(hideCircle, 1000)
         fab.setImageResource(R.drawable.ic_start_connected)
-        profile = app.currentProfile.orNull
         if (profile.method.length() == 0) statusText.setText("Socks5 Client Enabled")
         else statusText.setText(R.string.vpn_connected)
       case ServiceState.STOPPING =>
