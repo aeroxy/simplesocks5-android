@@ -143,7 +143,7 @@ trait BaseService extends Service {
       , (if (remoteHost == null) profile.host else remoteHost)
       , (if (remotePort < 0) profile.remotePort else remotePort).toString
       , getFilesDir().getAbsolutePath())
-    Toast.makeText("Connected to local at" + app.dataStore.portProxy, R.string.stopping, Toast.LENGTH_SHORT).show()
+    Toast.makeText(this, "Connected to local at" + app.dataStore.portProxy, Toast.LENGTH_SHORT).show()
     return new GuardedProcess(cmd: _*).start()
   }
 
