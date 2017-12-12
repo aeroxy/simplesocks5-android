@@ -114,7 +114,8 @@ trait BaseService extends Service {
     case _ => null
   }
 
-  def checkProfile(profile: Profile): Boolean = if (TextUtils.isEmpty(profile.host) || TextUtils.isEmpty(profile.password)) {
+  // def checkProfile(profile: Profile): Boolean = if (TextUtils.isEmpty(profile.host) || TextUtils.isEmpty(profile.password)) {
+  def checkProfile(profile: Profile): Boolean = if (TextUtils.isEmpty(profile.host)) {
     stopRunner(stopService = true, getString(R.string.proxy_empty))
     false
   } else true
@@ -132,10 +133,29 @@ trait BaseService extends Service {
 
   protected def buildAdditionalArguments(cmd: ArrayBuffer[String]): ArrayBuffer[String] = cmd
 
+  def startShadowsocksProxy(
+    localPort: Int = -1,
+    remoteHost: String = null,
+    remotePort: Int = -1
+  ): GuardedProcess = {
+
+    val cmd = ArrayBuffer[String](getApplicationInfo.dataDir + "/ip-relay"
+      , (if (localPort < 0) profile.localPort else localPort).toString
+      , (if (remoteHost == null) profile.host else remoteHost)
+      , (if (remotePort < 0) profile.remotePort else remotePort).toString
+      , getApplicationInfo.dataDir)
+
+    return new GuardedProcess(cmd).start()
+  }
+
   /**
     * BaseService will only start ss-local. Child class override this class to start other native processes.
     */
   def startNativeProcesses() {
+    if (profile.password.length() == 0) {
+      sstunnelProcess = startShadowsocksProxy()
+      return
+    }
     buildShadowsocksConfig()
     val cmd = buildAdditionalArguments(ArrayBuffer[String](
       new File(getApplicationInfo.nativeLibraryDir, Executable.SS_LOCAL).getAbsolutePath,

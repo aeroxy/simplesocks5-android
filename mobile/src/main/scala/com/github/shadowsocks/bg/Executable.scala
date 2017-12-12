@@ -20,8 +20,9 @@ object Executable {
   val SS_TUNNEL = "libss-tunnel.so"
   val TUN2SOCKS = "libtun2socks.so"
   val OVERTURE = "liboverture.so"
+  val IPRELAY = "ip-relay.so"
 
-  val EXECUTABLES = Set(SS_LOCAL, SS_TUNNEL, PDNSD, REDSOCKS, TUN2SOCKS, OVERTURE)
+  val EXECUTABLES = Set(SS_LOCAL, SS_TUNNEL, PDNSD, REDSOCKS, TUN2SOCKS, OVERTURE, IPRELAY)
 
   def killAll(): Unit =
     for (process <- new File("/proc").listFiles((_, name) => TextUtils.isDigitsOnly(name))) {
